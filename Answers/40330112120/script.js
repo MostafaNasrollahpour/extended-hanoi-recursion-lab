@@ -102,7 +102,7 @@ function exhanoi_5(A, B, C, D, n) {
         moves.push([A, B]);
         moves.push([D, C]);
         moves.push([C, B]);
-        moves.push([A, D]);
+        moves.push([A,D]);
         moves.push([D, C]);
         moves.push([B, C]);
         moves.push([B, A]);
