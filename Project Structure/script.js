@@ -111,20 +111,47 @@ function exhanoi_4(A, B, C, D, n) {
 
 // before coding read about the extra rules for this ExHanoi
 function exhanoi_5(A, B, C, D, n) {
-    if (n===1){
-        moves.push([A,B])
-        moves.push([B,C])
-        return
-    }else {
+  if (n <= 1) {
+    let seq = [
+      [C, B], [C, D], [D, A], [C, D], [A, D], [B, C], [C, D],
+      [B, A], [B, C], [A, B], [B, C], [A, B], [C, B], [B, A],
+      [C, B], [A, B], [B, C], [B, A], [C, B], [B, A], [B, C],
+      [A, B], [B, C], [A, B], [C, B], [B, A], [B, C], [A, B],
+      [B, C], [D, A], [D, C], [C, B], [D, C], [B, C], [A, B], [B, C]
+    ];
 
-        exhanoi_5(A,B,C,D,n-1);
-        moves.push([A,B])
-        exhanoi_5(B,C,D,A,n-1);
-        moves.push([B,C])
-        
+    let i = 0;
+    while (i < seq.length) {
+      moves.push(seq[i]);
+      i++;
     }
-    return
+  } else {
+    exhanoi_5(A, B, C, D, n - 1);
+    moves.push([A, D]);
 
+    assist_exHanoi_5(C, B, A, D, 6 * (n - 1) + 3);
+
+    moves.push([D, C]);
+    moves.push([B, C]);
+    moves.push([C, D]);
+    moves.push([B, C]);
+    moves.push([D, C]);
+
+    assist_exHanoi_5(A, B, C, D, 6 * (n - 1) + 3);
+  }
+}
+
+function assist_exHanoi_5(A, B, C, D, n) {
+  if (n <= 1) {
+    moves.push([A, B]);
+    moves.push([B, C]);
+  } else {
+    assist_exHanoi_5(A, B, C, D, n - 1);
+    moves.push([A, B]);
+    assist_exHanoi_5(C, D, A, B, n - 1);
+    moves.push([B, C]);
+    assist_exHanoi_5(A, D, C, B, n - 1);
+  }
 }
 
 function moveDisks(from, to){
