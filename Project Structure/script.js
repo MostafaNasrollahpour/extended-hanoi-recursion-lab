@@ -1,8 +1,8 @@
-const prev  = document.getElementById('btn-prev');
+const prev = document.getElementById('btn-prev');
 const start = document.getElementById('btn-start');
-const stop  = document.getElementById('btn-stop');
-const next  = document.getElementById('btn-next');
-const end   = document.getElementById('btn-end');
+const stop = document.getElementById('btn-stop');
+const next = document.getElementById('btn-next');
+const end = document.getElementById('btn-end');
 const input = document.getElementById('disk-numbers');
 const exHanoi1 = document.getElementById('exhanoi_1');
 const exHanoi2 = document.getElementById('exhanoi_2');
@@ -15,26 +15,26 @@ let backMoves = []
 let TIME = 500;
 
 const rods = {
-    A : document.getElementById('A'),
-    B : document.getElementById('B'),
-    C : document.getElementById('C'),
-    D : document.getElementById('D')
+    A: document.getElementById('A'),
+    B: document.getElementById('B'),
+    C: document.getElementById('C'),
+    D: document.getElementById('D')
 }
 
 let disks = [];
-function diskCreator(number, className){
-    for(let i = 0 ; i < number; i++){
+function diskCreator(number, className) {
+    for (let i = 0; i < number; i++) {
         const disk = document.createElement("div");
         disk.classList.add(className);
 
-        if(window.innerWidth < 480)
-            disk.style.width = `calc(60px + ${(number - i*2)}px)`;
-        else if(window.innerWidth < 768)
-            disk.style.width = `calc(90px + ${(number - i*3)}px)`;
-        else if(window.innerWidth < 992)
-            disk.style.width = `calc(130px + ${(number - i*4)}px)`;
+        if (window.innerWidth < 480)
+            disk.style.width = `calc(60px + ${(number - i * 2)}px)`;
+        else if (window.innerWidth < 768)
+            disk.style.width = `calc(90px + ${(number - i * 3)}px)`;
+        else if (window.innerWidth < 992)
+            disk.style.width = `calc(130px + ${(number - i * 4)}px)`;
         else
-            disk.style.width = `calc(170px + ${(number - i*5)}px)`;
+            disk.style.width = `calc(170px + ${(number - i * 5)}px)`;
         disk.innerText = i + 1;
         disks.push(disk);
     }
@@ -42,73 +42,132 @@ function diskCreator(number, className){
 
 // for Move A --> B use this: moves.push([A, B])
 function hanoi(from, via, to, n) {
-    return
+    n = parseInt(n);
+    if (n > 0) {
+        hanoi(from, to, via, n - 1);
+        moves.push([from, to]);
+        hanoi(via, from, to, n - 1);
+    }
 }
 
-function exHanoi_1(start, aux, end, n) {
-    alert("your function is not complete")
-    return
-}  
+function exHanoi_1(A, B, C, n) {
+    n = parseInt(n);
+    if (n > 0) {
+        hanoi(C, B, A, 3 * n);
+        hanoi(B, A, C, 2 * n);
+        hanoi(A, B, C, 3 * n);
+        hanoi(A, B, C, n);
+    }
+}
 
 function exHanoi_2(A, B, C, D, n) {
-    alert("your function is not complete")
-    return
-
+    n = parseInt(n);
+    if (n > 0) {
+        hanoi(A, D, B, n);
+        hanoi(C, D, A, n);
+        hanoi(B, D, C, n);
+    }
 }
 
 function exhanoi_3(A, B, C, n) {
-    alert("your function is not complete")
-    return
-
+    n = parseInt(n);
+    if (n > 0) {
+        exhanoi_3(A, B, C, n - 1);
+        hanoi(C, B, A, 3 * n - 3);
+        moves.push([A, B]);
+        moves.push([B, C]);
+        moves.push([B, C]);
+        moves.push([B, C]);
+        hanoi(A, B, C, 3 * n - 3);
+    }
 }
 
 // before coding read about the extra rules for this ExHanoi
 function exhanoi_4(A, B, C, D, n) {
-    alert("your function is not complete")
-    return
+    n = parseInt(n);
 
+    function move_within_group(count, G1_from, G1_to, G2_1, G2_2) {
+        if (count > 0) {
+            move_between_groups(count - 1, G1_from, G2_1, G1_to, G2_2);
+            moves.push([G1_from, G2_2]);
+            moves.push([G2_2, G1_to]);
+            move_between_groups(count - 1, G2_1, G1_to, G1_from, G2_2);
+        }
+    }
+
+    function move_between_groups(count, G1_from, G2_to, G1_aux, G2_aux) {
+        if (count > 0) {
+            move_between_groups(count - 1, G1_from, G2_aux, G1_aux, G2_to);
+            moves.push([G1_from, G2_to]);
+            move_within_group(count - 1, G2_aux, G2_to, G1_from, G1_aux);
+        }
+    }
+
+    if (n > 0) {
+        move_between_groups(n, A, C, B, D);
+    }
 }
 
 // before coding read about the extra rules for this ExHanoi
 function exhanoi_5(A, B, C, D, n) {
-    alert("your function is not complete")
-    return
+    n = parseInt(n);
 
+    function move_adj(count, from, to, aux_diag, aux_adj_far) {
+        if (count > 0) {
+            move_diag(count - 1, from, aux_diag, to, aux_adj_far);
+            moves.push([from, to]);
+            move_diag(count - 1, aux_diag, to, from, aux_adj_far);
+        }
+    }
+
+    function move_diag(count, from, to, aux_adj1, aux_adj2) {
+        if (count > 0) {
+            move_adj(count - 1, from, aux_adj1, to, aux_adj2);
+            moves.push([from, aux_adj2]);
+            moves.push([aux_adj2, to]);
+            move_adj(count - 1, aux_adj1, to, from, aux_adj2);
+        }
+    }
+
+    if (n > 0) {
+        move_diag(n, A, D, B, C);
+        move_adj(2 * n, B, C, D, A);
+        move_adj(n, D, C, A, B);
+    }
 }
-
-function moveDisks(from, to){
+function moveDisks(from, to) {
     const fromEl = rods[from];
     const toEl = rods[to];
     const disk = fromEl.firstChild;
-    if(TIME > 200){
+    if (TIME > 200) {
         disk.animate([
-            {bottom: "500px"},
-            {bottom: "0"}
-        ], TIME-200)
+            { bottom: "500px" },
+            { bottom: "0" }
+        ], TIME - 200)
     }
     toEl.insertBefore(disk, toEl.firstChild);
 }
 
-function start_stop(){
-    if(start.classList != "btn-disabled")
+function start_stop() {
+    if (start.classList != "btn-disabled")
         start.classList.add("btn-disabled")
     else
         start.classList.remove("btn-disabled");
 
-    const myInterval = setInterval(() =>{
-        if(moves.length === 0)
+    const myInterval = setInterval(() => {
+        if (moves.length === 0)
             return
         const [from, to] = moves.shift();
         backMoves.push([from, to]);
         moveDisks(from, to);
-        if(moves.length < 1){
+        if (moves.length < 1) {
             stop.click();
             next.classList.add("btn-disabled");
             start.classList.add("btn-disabled");
             end.classList.add("btn-disabled");
         }
         console.log(`${from} -----> ${to}`);
-    },TIME);
+    }, TIME);
 
     stop.addEventListener("click", () => {
         stop.classList.add("btn-disabled");
@@ -116,14 +175,14 @@ function start_stop(){
         clearInterval(myInterval);
     })
 }
-function nextMove(){
+function nextMove() {
     next.classList.remove("btn-disabeld");
     prev.classList.remove("btn-disabeld");
     const [from, to] = moves.shift();
     backMoves.push([from, to]);
     moveDisks(from, to);
     console.log(`${from} -----> ${to}`);
-    if(moves.length < 1){
+    if (moves.length < 1) {
         stop.click();
         next.classList.add("btn-disabled");
         start.classList.add("btn-disabled");
@@ -131,26 +190,27 @@ function nextMove(){
     }
 
 }
-function prevMove(){
-    if(backMoves.length < 1)
+function prevMove() {
+    if (backMoves.length < 1)
         return;
     const [to, from] = backMoves.pop();
     moves.unshift([to, from]);
     moveDisks(from, to);
     console.log(`${from} -----> ${to}`);
-    if(backMoves.length < 1)
+    if (backMoves.length < 1)
         prev.classList.add("btn-disabled")
 }
-function endMoves(){
+function endMoves() {
     stop.click();
     TIME = 1;
     start.click();
 }
 input.addEventListener("keydown", (e) => {
-    if(e.key == 'Enter')
+    if (e.key == 'Enter')
         exHanoi1.click();
 })
-document.addEventListener("keydown", (e) => {;
+document.addEventListener("keydown", (e) => {
+    ;
     switch (e.key) {
         case 'a':
             prev.click();
@@ -166,9 +226,9 @@ document.addEventListener("keydown", (e) => {;
             break;
     }
 })
-function buttonsWorks(){
+function buttonsWorks() {
     start.classList.remove("btn-disabled");
-    if(backMoves.length > 0)
+    if (backMoves.length > 0)
         prev.classList.remove("btn-disabled");
 
 
@@ -182,11 +242,11 @@ function buttonsWorks(){
     input.classList.add("btn-disabled");
     input.disabled = true;
 
-    start.addEventListener("click", () =>{
+    start.addEventListener("click", () => {
         stop.classList.remove("btn-disabled");
         start_stop();
         prev.classList.remove("btn-disabled");
-        if(moves.length < 1){
+        if (moves.length < 1) {
             next.classList.add("btn-disabled");
             end.classList.add("btn-disabled");
             stop.click();
@@ -209,48 +269,48 @@ function buttonsWorks(){
 }
 //.............................ExHanoi Number 1..................................\\
 exHanoi1.addEventListener("click", () => {
-    if(input.value === ""){
+    if (input.value === "") {
         alert("Enter A Number First")
         return
     }
     const number = input.value;
     console.log(number);
-    if((number < 0) || (number > 7)){
+    if ((number < 0) || (number > 7)) {
         alert("Your Number Is Not In The Range")
         location.reload();
         return
     }
-    
-    diskCreator(6*number, "disk");
 
-    let index = 6*number - 1;
-    while(index >= 0){
+    diskCreator(6 * number, "disk");
+
+    let index = 6 * number - 1;
+    while (index >= 0) {
         rods.A.appendChild(disks[index])
         index--;
-        for(let j = 0; j < 2; j++){
-            rods.B.appendChild(disks[index])        
+        for (let j = 0; j < 2; j++) {
+            rods.B.appendChild(disks[index])
             index--;
         }
-        for(let j = 0; j < 3; j++){
-            rods.C.appendChild(disks[index])        
+        for (let j = 0; j < 3; j++) {
+            rods.C.appendChild(disks[index])
             index--;
         }
     }
     buttonsWorks()
     exHanoi_1('A', 'B', 'C', number);
     console.log(`Number Of Moves : ${moves.length}`);
-    
+
 })
 //.............................ExHanoi Number 2..................................\\
-exHanoi2.addEventListener("click",() => {
-    if(input.value === ""){
+exHanoi2.addEventListener("click", () => {
+    if (input.value === "") {
         alert("Enter A Number First")
         return
     }
     const number = input.value;
-    if(number === null)
+    if (number === null)
         return
-    if((number < 0) || (number > 7)){
+    if ((number < 0) || (number > 7)) {
         alert("Your Number Is Not In The Range")
         location.reload();
         return
@@ -259,7 +319,7 @@ exHanoi2.addEventListener("click",() => {
     rods.D.classList.remove("noDisplay")
     diskCreator(number, "disk")
 
-    for(let index = number-1; index >= 0; index--)
+    for (let index = number - 1; index >= 0; index--)
         rods.A.appendChild(disks.pop());
     diskCreator(number, "disk")
 
@@ -271,23 +331,23 @@ exHanoi2.addEventListener("click",() => {
 })
 
 //.............................ExHanoi Number 3..................................\\
-exHanoi3.addEventListener("click", ()=> {
-    if(input.value === ""){
+exHanoi3.addEventListener("click", () => {
+    if (input.value === "") {
         alert("Enter A Number First")
         return
     }
     const number = input.value;
-    if((number < 0) || (number > 7)){
+    if ((number < 0) || (number > 7)) {
         alert("Your Number Is Not In The Range")
         location.reload();
         return
     }
-    diskCreator(3*number, "disk");
+    diskCreator(3 * number, "disk");
 
-    for(let index = 3*number - 1; index  >= 0; index-= 3){
+    for (let index = 3 * number - 1; index >= 0; index -= 3) {
         rods.B.appendChild(disks[index])
-        rods.B.appendChild(disks[index-1])
-        rods.A.appendChild(disks[index-2])
+        rods.B.appendChild(disks[index - 1])
+        rods.A.appendChild(disks[index - 2])
     }
     buttonsWorks()
     exhanoi_3('A', 'B', 'C', number)
