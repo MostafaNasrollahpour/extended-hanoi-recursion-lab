@@ -98,10 +98,10 @@ function exhanoi_4(A, B, C, D, n) {
         return
     }else {
 
-        exHanoi4(A,B,D,C, n-1);
+        exhanoi_4(A,B,D,C, n-1);
         moves.push([A,C])
-        exHanoi4(D,C,A,B,n-1);
-        exHanoi4(A,B,C,D,n-1)
+        exhanoi_4(D,C,A,B,n-1);
+        exhanoi_4(A,B,C,D,n-1)
 
     }
     alert("your function is not complete")
@@ -121,7 +121,7 @@ function exhanoi_5(A, B, C, D, n) {
         moves.push([A,B])
         exhanoi_5(B,C,D,A,n-1);
         moves.push([B,C])
-        exhanoi_5(A,B,C,D,n-1);
+        
     }
     return
 
