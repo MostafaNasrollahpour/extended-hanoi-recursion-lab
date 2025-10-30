@@ -111,7 +111,7 @@ function exhanoi_4(A, B, C, D, n) {
 }
 
 // before coding read about the extra rules for this ExHanoi
-function adjustant_hanoi(A,B,C,n) {
+function tanzim_hanoi1(A,B,C,n) {
     if(n==1) {
         moves.push([A,B]);
         moves.push([B,C]);
@@ -125,7 +125,7 @@ function adjustant_hanoi(A,B,C,n) {
     }
 }
 
-function adjustant_hanoi2(A,B,C,n){
+function tanzim_hanoi2(A,B,C,n){
     if(n==1) {
         moves.push([A,B])
     }
