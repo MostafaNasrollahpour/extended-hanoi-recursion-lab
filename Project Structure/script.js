@@ -42,39 +42,146 @@ function diskCreator(number, className){
 
 // for Move A --> B use this: moves.push([A, B])
 function hanoi(from, via, to, n) {
+    if(n === 1){
+        moves.push([from, to]); 
+        return
+    }
+    
+    hanoi(from, to, via, n - 1);
+    moves.push([from, to]);
+    hanoi(via, from, to, n - 1);
+
+}
+function exHanoi_1(start, aux, end, n) {
+    if(n==1){
+        moves.push([start,aux]);
+        hanoi(aux , start , end , 3);
+    }
+    else{
+        exHanoi_1(start , aux , end , n-1);
+        moves.push([start,aux]);
+        hanoi(end , start , aux , 6*(n-1));
+        hanoi(aux , start , end , 3*(2*n -1));
+    }
     return
 }
 
-function exHanoi_1(start, aux, end, n) {
-    alert("your function is not complete")
-    return
-}  
+
 
 function exHanoi_2(A, B, C, D, n) {
-    alert("your function is not complete")
-    return
-
+   hanoi(A,B,D,n);
+   hanoi(C,B,A,n);
+   hanoi(D,B,C,n);
 }
 
 function exhanoi_3(A, B, C, n) {
-    alert("your function is not complete")
+   if(n > 1){
+        exhanoi_3(A , B , C , n-1);
+        hanoi(C , A , B , 3*(n-1));
+    }
+    moves.push([A,C]);
+    hanoi(B , A , C , 3*n-1);
+    return
+}
+
+// before coding read about the extra rules for this ExHanoi
+function exhanoi_4(A, B, C, D, n) {
+   if(n==1){
+        moves.push([A,C]);
+    }else{
+        exhanoi_4(A , B , D , C , n-1);
+        moves.push([A,C]);
+        exhanoi_4(D , C , A , B , n-1);
+        exhanoi_4(A , B , C , D , n-1);
+    }
+    
     return
 
 }
 
 // before coding read about the extra rules for this ExHanoi
 function exhanoi_4(A, B, C, D, n) {
-    alert("your function is not complete")
+    if(n==1){
+        moves.push([A, C]);
+    }else{
+        exhanoi_4(A, B, C, D, n - 1);
+        moves.push([A, D]);
+        exhanoi_4(C, D, A, B, n - 1);
+        moves.push([D, B]);
+        moves.push([B, C]);
+        exhanoi_4(A, B, C, D, n - 1);
+    }
     return
 
 }
+
 
 // before coding read about the extra rules for this ExHanoi
+
+
+function func(A, B, C, D, n) {
+    if(n==1){
+        moves.push([A, B]);
+        moves.push([B, C]);
+    }else{
+        func(A, B, C, D, n - 1);
+        moves.push([A, B]);
+        func(C, D, A, B, n - 1);
+        moves.push([B, C]);
+        func(A, D, C, B, n - 1);
+    }
+}
+
 function exhanoi_5(A, B, C, D, n) {
-    alert("your function is not complete")
+    if(n==1){
+        moves.push([C, D]);
+        moves.push([C, B]);
+        moves.push([B, A]);
+        moves.push([C, B]);
+        moves.push([A, B]);
+        moves.push([D, C]);
+        moves.push([C, B]);
+        moves.push([A, D]);
+        moves.push([D, C]);
+        moves.push([B, C]);
+        moves.push([B, A]);
+        moves.push([C, B]);
+        moves.push([B, A]);
+        moves.push([B, C]);
+        moves.push([C, D]);
+        moves.push([A, D]);
+        moves.push([D, C]);
+        moves.push([A, D]);
+        moves.push([C, D]);
+        moves.push([B, A]);
+        moves.push([B, C]);
+        moves.push([A, B]);
+        moves.push([B, C]);
+        moves.push([D, A]);
+        moves.push([D, C]);
+        moves.push([C, B]);
+        moves.push([D, C]);
+        moves.push([B, C]);
+        moves.push([A, B]);
+        moves.push([B, C]);
+    }else{
+        exhanoi_5(A,B,C,D,n-1);
+        moves.push([A,D]);
+        func(C,B,A,D,6*n-3);
+        moves.push([D,C]);
+        moves.push([B,C]);
+        moves.push([C,D])
+        moves.push([B,C]);
+        moves.push([D,C]);
+        func(A,B,C,D,6*n-3);
+
+
+    }
     return
 
+
 }
+
 
 function moveDisks(from, to){
     const fromEl = rods[from];
