@@ -60,9 +60,12 @@ function exHanoi_1(start, aux, end, n) {
 }
 
 function exHanoi_2(A, B, C, D, n) {
-    alert("your function is not complete")
-    return
+ 
+    hanoi(A, D, B, n);
 
+    hanoi(C, D, A, n);
+
+    hanoi(B, D, C, n);
 }
 
 function exhanoi_3(A, B, C, n) {
