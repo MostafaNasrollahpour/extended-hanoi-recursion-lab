@@ -144,13 +144,13 @@ function exhanoi_5(A, B, C, D, n) {
     else{
         exhanoi_5(A , B , C , D , n-1);
         moves.push([A,D]);
-        Ahanoi(C , D , A , B , 6*n-3);
+        help_hanoi(C , D , A , B , 6*n-3);
         moves.push([D,C]);
         moves.push([B,C]);
         moves.push([C,D]);
         moves.push([B,C]);
         moves.push([D,C]);
-        Ahanoi(A , B , C , D , 6*n-3);
+        help_hanoi(A , B , C , D , 6*n-3);
 
 
     }
@@ -158,19 +158,19 @@ function exhanoi_5(A, B, C, D, n) {
 
 }
 
-function Ahanoi(A, B, C, D,  n) {
+function help_hanoi(A, B, C, D,  n) {
     if(n==1){
         moves.push([A,D]);
         moves.push([D,C]);
     }
     else{
-        Ahanoi(A , B , C , D , n-1);
+        help_hanoi(A , B , C , D , n-1);
         moves.push([A,B]);
         
-        Ahanoi(C , D , A , B , n-1);
+        help_hanoi(C , D , A , B , n-1);
         moves.push([B,C]);
 
-        Ahanoi(A , B , C , D , n-1);
+        help_hanoi(A , B , C , D , n-1);
     }
 
 }
