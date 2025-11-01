@@ -40,52 +40,94 @@ function diskCreator(number, className){
     }
 }
 
-// for Move A --> B use this: moves.push([A, B])
 function hanoi(from, via, to, n) {
-    if (n === 0) {
-        return; 
+    if (n <= 0) {
+        return;
     }
-    hanoi(from, to, via, n - 1);
-    moves.push([from, to]);
-    hanoi(via, from, to, n - 1);
+
+    if (n === 1) {
+        moves.push([from, to]);
+    }
+    else
+        {
+        hanoi(from, to, via, n - 1);
+        moves.push([from, to]);
+        hanoi(via, from, to, n - 1);
+    }
 }
 
 function exHanoi_1(start, aux, end, n) {
-    if (n === 0) {
-        return;
+    if(n==1){
+
+        moves.push([start,aux]);
+        hanoi(aux , start , end , 3);
     }
-    exHanoi_1(start, aux, end, n - 1);
-    hanoi(aux, start, end, 2);
-    moves.push([start, end]);
+
+    else
+        {
+        exHanoi_1(start , aux , end , n-1);
+        moves.push([start,aux]);
+        hanoi(end , start , aux , 6*(n-1));
+        hanoi(aux , start , end , 3*(2*n -1));
+    }
+    return
+
 }
 
 function exHanoi_2(A, B, C, D, n) {
- 
-    hanoi(A, D, B, n);
 
-    hanoi(C, D, A, n);
+    hanoi(A,D,B,n)
 
-    hanoi(B, D, C, n);
+    hanoi(C,D,A,n)
+
+    hanoi(B,D,C,n)
+
+    return
 }
 
+
 function exhanoi_3(A, B, C, n) {
-    alert("your function is not complete")
+    if(n==1){
+    hanoi(A, B, C, 1);
+    hanoi(B,A,C,2)
+    }
+    else{
+        exhanoi_3(A,B,C,n-1)
+        hanoi(C,A,B,3*n-3)
+        hanoi(A, B, C, 1);
+        hanoi(B,A,C,3*n-1)
+    }
     return
 
 }
 
 // before coding read about the extra rules for this ExHanoi
 function exhanoi_4(A, B, C, D, n) {
-    alert("your function is not complete")
-    return
+    if(n==1){
+        hanoi(A,B,C, 1);
+    }else{
+        exhanoi_4(A,B,C,D, n-1);
+        exhanoi_4(C,D,B,A, n-1);
+        hanoi(A,B,C, 1);
+        exhanoi_4(B,A,C,D, n-1);
+    }
+    return
 
 }
 
-// before coding read about the extra rules for this ExHanoi
 function exhanoi_5(A, B, C, D, n) {
-    alert("your function is not complete")
-    return
+    
+    if (n==1) {
+        exhanoi_4(C,A,B,D,3);
+        hanoi(A,B,C, 1);
+        exhanoi_4(B,D,C,A,5);
+        return; 
+    }
 
+    exhanoi_5(A, B, C, D, n-1);
+    exhanoi_4(C,A,B,D,6*n-3);
+    hanoi(A,B,C, 1);
+    exhanoi_4(B,D,C,A,6*n-1);
 }
 
 function moveDisks(from, to){
