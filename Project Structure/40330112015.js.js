@@ -40,40 +40,76 @@ function diskCreator(number, className){
     }
 }
 
-// for Move A --> B use this: moves.push([A, B])
-function hanoi(from, via, to, n) {
-    return
+function hanoi(A, B, C, n) {
+    if (n <= 0) return;
+    hanoi(A, C, B, n - 1);   // A → B با کمک C
+    moves.push([A, C]);      // حرکت اصلی
+    hanoi(B, A, C, n - 1);   // B → C با کمک A
 }
 
-function exHanoi_1(start, aux, end, n) {
-    alert("your function is not complete")
-    return
-}  
+function exHanoi_1(A, B, C, n) {
+    const small = n;
+    const medium = 2 * n;
+    hanoi(B, C, A, medium);  // جابجایی دیسک‌های میله B
+    hanoi(A, B, C, small);   // انتقال دیسک‌های A به C
+    hanoi(A, B, C, medium);  // انتقال باقیمانده‌ها به C
+}
 
 function exHanoi_2(A, B, C, D, n) {
-    alert("your function is not complete")
-    return
-
+    hanoi(A, B, D, n);
+    hanoi(C, B, A, n);
+    hanoi(D, B, C, n);
 }
 
 function exhanoi_3(A, B, C, n) {
-    alert("your function is not complete")
-    return
-
+    const a = n, b = 2 * n;
+    hanoi(B, C, A, b);
+    hanoi(A, B, C, a);
+    hanoi(A, B, C, b);
 }
 
-// before coding read about the extra rules for this ExHanoi
+const _ex4Allowed = new Set(["AC","CA","AD","DA","BC","CB","BD","DB"]);
+function _ex4Move1(from, to) {
+    const key = from + to;
+    if (_ex4Allowed.has(key)) { moves.push([from, to]); return; }
+    const inter = (key === "AB" || key === "BA") ? "C" : "A";
+    moves.push([from, inter]);
+    moves.push([inter, to]);
+}
+
 function exhanoi_4(A, B, C, D, n) {
-    alert("your function is not complete")
-    return
-
+    (function go(k, from, to, x, y){
+        if (k <= 0) return;
+        go(k-1, from, x, y, to);
+        _ex4Move1(from, to);
+        go(k-1, x, to, from, y);
+    })(n, A, C, B, D);
 }
 
-// before coding read about the extra rules for this ExHanoi
-function exhanoi_5(A, B, C, D, n) {
-    alert("your function is not complete")
-    return
+const _nextCW = { A:"B", B:"C", C:"D", D:"A" };
+function _cycle2(n, src) {
+    if (n <= 0) return;
+    _cycle1(n-1, src);
+    moves.push([src, _nextCW[src]]);
+    _cycle1(n-1, _nextCW[src]);
+}
+function _cycle1(n, src) {
+    if (n <= 0) return;
+    const mid = _nextCW[src];
+    const two = _nextCW[mid];
+    _cycle2(n-1, src);
+    moves.push([src, mid]);
+    _cycle2(n-1, two);
+}
 
+function exhanoi_5(A, B, C, D, n) {
+    const move3 = (cnt, from) => {
+        _cycle1(cnt, from);
+        _cycle1(cnt, _nextCW[from]);
+        _cycle1(cnt, _nextCW[_nextCW[from]]);
+    };
+    move3(n, A);
+    _cycle1(2*n, B);
 }
 
 function moveDisks(from, to){
@@ -220,7 +256,7 @@ exHanoi1.addEventListener("click", () => {
         location.reload();
         return
     }
-    
+
     diskCreator(6*number, "disk");
 
     let index = 6*number - 1;
@@ -228,18 +264,18 @@ exHanoi1.addEventListener("click", () => {
         rods.A.appendChild(disks[index])
         index--;
         for(let j = 0; j < 2; j++){
-            rods.B.appendChild(disks[index])        
+            rods.B.appendChild(disks[index])
             index--;
         }
         for(let j = 0; j < 3; j++){
-            rods.C.appendChild(disks[index])        
+            rods.C.appendChild(disks[index])
             index--;
         }
     }
     buttonsWorks()
     exHanoi_1('A', 'B', 'C', number);
     console.log(`Number Of Moves : ${moves.length}`);
-    
+
 })
 //.............................ExHanoi Number 2..................................\\
 exHanoi2.addEventListener("click",() => {
