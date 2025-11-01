@@ -40,40 +40,262 @@ function diskCreator(number, className){
     }
 }
 
-// for Move A --> B use this: moves.push([A, B])
+
 function hanoi(from, via, to, n) {
+    if (n === 1) {
+        moves.push([from, to]);
+    } else {
+        hanoi(from, to, via, n - 1);
+        moves.push([from, to]);
+        hanoi(via, from, to, n - 1);
+    }
     return
 }
 
 function exHanoi_1(start, aux, end, n) {
-    alert("your function is not complete")
-    return
+    
+    let totalDisks = 0;
+    for (let i = 1; i <= n; i++) {
+        totalDisks += i;
+    }
+
+    
+    for (let disk = totalDisks; disk >= 1; disk--) {
+        
+        let currentRod = findCurrentRod(disk, n);
+        
+        if (currentRod !== end) {
+            
+            let tempRod = getTempRod(currentRod, end);
+            
+            
+            if (disk === 1) {
+                moves.push([currentRod, end]);
+        
+                hanoi(currentRod, tempRod, end, 1);
+            }
+        }
+    }
+
+
+
+    function findCurrentRod(disk, n) {
+        let rod = start;
+        let count = 1;
+        
+        for (let i = 1; i <= n; i++) {
+            for (let j = 0; j < i; j++) {
+                if (count === disk) {
+                    return rod;
+                }
+                count++;
+            }
+            
+            if (rod === start) rod = aux;
+            else if (rod === aux) rod = end;
+            else rod = start;
+        }
+        return start;
+    }
+
+    
+    function getTempRod(from, to) {
+        const rods = [start, aux, end];
+        for (let rod of rods) {
+            if (rod !== from && rod !== to) {
+                return rod;
+            }
+        }
+        return aux;
+    }
 }  
 
 function exHanoi_2(A, B, C, D, n) {
-    alert("your function is not complete")
-    return
+    for (let i = 0; i < n; i++) {
+        if (i % 2 === 0) {
+            moves.push([A, B]);
+        } else {
+            moves.push([A, D]);
+        }
+    }
+    
+    for (let i = 0; i < n; i++) {
+        moves.push([C, A]);
+    }
+
+    for (let i = 0; i < n; i++) {
+        moves.push([C, A]);
+    }
+    
+    for (let i = 0; i < n; i++) {
+        if (i % 2 === 0) {
+            moves.push([B, C]);
+        } else {
+            moves.push([D, C]);
+        }
+    }
 
 }
 
 function exhanoi_3(A, B, C, n) {
-    alert("your function is not complete")
-    return
+
+    const totalDisks = 2 * n;
+    
+
+    for (let disk = totalDisks; disk >= 1; disk--) {
+        
+        let currentRod = (disk % 2 === 1) ? A : B;
+        
+        if (currentRod !== C) {
+            let tempRod = (currentRod === A) ? B : A;
+            moves.push([currentRod, C]);
+        }
+    }
 
 }
 
 // before coding read about the extra rules for this ExHanoi
 function exhanoi_4(A, B, C, D, n) {
-    alert("your function is not complete")
-    return
+    
+     function restrictedHanoi(disk, from, to, aux1, aux2) {
+        if (disk === 1) {
+            if (isAllowedMove(from, to)) {
+                moves.push([from, to]);
+            } else {
+
+                const intermediate = findIntermediateRod(from, to);
+                moves.push([from, intermediate]);
+                moves.push([intermediate, to]);
+            }
+            } else {
+            if (!isAllowedMove(from, to)) {
+                const intermediate = findIntermediateRod(from, to);
+                restrictedHanoi(disk - 1, from, intermediate, to, aux2);
+                moves.push([from, to]);
+                restrictedHanoi(disk - 1, intermediate, to, from, aux2);
+            } else {
+                restrictedHanoi(disk - 1, from, aux1, to, aux2);
+                moves.push([from, to]);
+                restrictedHanoi(disk - 1, aux1, to, from, aux2);
+            }
+        }
+    }
+
+    function isAllowedMove(from, to) {
+        const allowedPairs = [[A, C], [A, D], [B, C], [B, D]];
+        return allowedPairs.some(pair => 
+            (pair[0] === from && pair[1] === to) || 
+            (pair[0] === to && pair[1] === from)
+        );
+    }
+    
+    function findIntermediateRod(from, to) {
+        const rods = [A, B, C, D];
+        for (let rod of rods) {
+            if (rod !== from && rod !== to && isAllowedMove(from, rod) && isAllowedMove(rod, to)) {
+                return rod;
+            }
+        }
+        return C; // fallback
+    }
+    
+    restrictedHanoi(n, A, C, B, D);
 
 }
 
 // before coding read about the extra rules for this ExHanoi
 function exhanoi_5(A, B, C, D, n) {
-    alert("your function is not complete")
-    return
+    
+    let totalDisks = 0;
+    for (let i = 1; i <= n; i++) {
+        totalDisks += i;
+    }
+    
+    
+    for (let diskSize = 1; diskSize <= totalDisks; diskSize++) {
+        const currentRod = findDiskPosition(diskSize, n);
+        if (currentRod !== C) {
+            moveDiskToC(currentRod, diskSize);
+        }
+    }
+    
+    
+    function findDiskPosition(disk, n) {
+        const rods = [A, B, C, D];
+        let rodIndex = 0;
+        let diskCount = 1;
+        
+        for (let group = 1; group <= n; group++) {
+            for (let i = 0; i < group; i++) {
+                if (diskCount === disk) {
+                    return rods[rodIndex];
+                }
+                diskCount++;
+            }
+            rodIndex = (rodIndex + 1) % 4;
+        }
+        return A;
+    }
+    
+    function moveDiskToC(fromRod, diskSize) {
+        if (fromRod === C) return; 
+        
+    
+        const path = findPath(fromRod, C);
+        
+        
+        if (path.length === 2) {
+            moves.push([fromRod, C]);
+        } else {
+    
+            for (let i = 0; i < path.length - 1; i++) {
+                moves.push([path[i], path[i + 1]]);
+            }
+        }
+    }
+    function findPath(from, to) {
+        if (from === to) return [from];
+        
+        
+        const adjacency = {
+            [A]: [B, D],
+            [B]: [A, C], 
+            [C]: [B, D],
+            [D]: [A, C]
+        };
+        const queue = [[from]];
+        const visited = new Set([from]);
+        
+        while (queue.length > 0) {
+            const path = queue.shift();
+            const current = path[path.length - 1];
+            
+            if (current === to) {
+                return path;
+            }
+            
+            const neighbors = adjacency[current];
+            for (let neighbor of neighbors) {
+                if (!visited.has(neighbor)) {
+                    visited.add(neighbor);
+                    queue.push([...path, neighbor]);
+                }
+            }
+        }
+        
+        return [from, to]; // fallback
+    }
 
+    function isValidMove(from, to) {
+        const validMoves = [
+            [A, B], [B, A],
+            [A, D], [D, A], 
+            [B, C], [C, B],
+            [C, D], [D, C]
+        ];
+        
+        return validMoves.some(([f, t]) => f === from && t === to);
+    }
 }
 
 function moveDisks(from, to){
