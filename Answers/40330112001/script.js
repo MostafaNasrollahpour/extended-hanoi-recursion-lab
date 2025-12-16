@@ -119,30 +119,21 @@ function exhanoi_4(A, B, C, D, n) {
        exhanoi_4(A, B, C, D,n-1);
    }
 }
-function ComakBeexhanoi_5(from, aux, to, n) {
-    if (n == 0) return;
-    if (n == 1) {
-        moves.push([from, to]);
-        return;
-    }
-    ComakBeexhanoi_5(  from, to, aux,n - 1);
-    moves.push([from, to]);
-    ComakBeexhanoi_5(  aux, from, to,n - 1,);
-}
+
 
 // before coding read about the extra rules for this ExHanoi
-function exhanoi_5(A, B, C, D, n) {
+function exhanoi_5(a, b, c, d, n) {
     if (n == 1) {
-    moves.push([A,D]);
-    ComakBeexhanoi_5(C,D,B,3);
-    moves.push([D,C]);
-    ComakBeexhanoi_5(B,A,C,5);
+        moves.push([a, d]);
+        exhanoi_4(c, a, b, d, 3);
+        moves.push([d, c]);
+        exhanoi_4(b, d, c, a, 5);
     } else {
-        exhanoi_5(A, B, C, D, n-1)
-        moves.push([A,D]);
-        ComakBeexhanoi_5(C,D,B,6 * n - 3);
-        moves.push([D,C]);
-        ComakBeexhanoi_5(B,A,C,6 * n -1);
+        exhanoi_5(a, b, c, d, n-1);
+        moves.push([a, d]);
+        exhanoi_4(c, a, b, d, 6*n-3);
+        moves.push([d, c]);
+        exhanoi_4(b, d, c, a, 6*n-1);
 
     }
 }
