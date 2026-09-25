@@ -25,7 +25,9 @@ let disks = [];
 function diskCreator(number, className){
     for(let i = 0 ; i < number; i++){
         const disk = document.createElement("div");
-        disk.classList.add(className);
+        disk.classList.add("disk");
+        if(className !== "disk")
+            disk.classList.add(className);
 
         if(window.innerWidth < 480)
             disk.style.width = `calc(60px + ${(number - i*2)}px)`;
@@ -56,21 +58,21 @@ function exHanoi_2(A, B, C, D, n) {
 
 }
 
-function exhanoi_3(A, B, C, n) {
+function exHanoi_3(A, B, C, n) {
     alert("your function is not complete")
     return
 
 }
 
 // before coding read about the extra rules for this ExHanoi
-function exhanoi_4(A, B, C, D, n) {
+function exHanoi_4(A, B, C, D, n) {
     alert("your function is not complete")
     return
 
 }
 
 // before coding read about the extra rules for this ExHanoi
-function exhanoi_5(A, B, C, D, n) {
+function exHanoi_5(A, B, C, D, n) {
     alert("your function is not complete")
     return
 
@@ -90,7 +92,7 @@ function moveDisks(from, to){
 }
 
 function start_stop(){
-    if(start.classList != "btn-disabled")
+    if(!start.classList.contains("btn-disabled"))
         start.classList.add("btn-disabled")
     else
         start.classList.remove("btn-disabled");
@@ -117,8 +119,11 @@ function start_stop(){
     })
 }
 function nextMove(){
-    next.classList.remove("btn-disabeld");
-    prev.classList.remove("btn-disabeld");
+    if(moves.length < 1)
+        return;
+
+    next.classList.remove("btn-disabled");
+    prev.classList.remove("btn-disabled");
     const [from, to] = moves.shift();
     backMoves.push([from, to]);
     moveDisks(from, to);
@@ -147,22 +152,29 @@ function endMoves(){
     start.click();
 }
 input.addEventListener("keydown", (e) => {
-    if(e.key == 'Enter')
+    if(e.key === 'Enter') {
+        e.preventDefault();
         exHanoi1.click();
+    }
 })
-document.addEventListener("keydown", (e) => {;
-    switch (e.key) {
+function clickIfEnabled(button) {
+    if (!button.classList.contains("btn-disabled"))
+        button.click();
+}
+
+document.addEventListener("keydown", (e) => {
+    switch (e.key.toLowerCase()) {
         case 'a':
-            prev.click();
+            clickIfEnabled(prev);
             break;
         case 'd':
-            next.click();
+            clickIfEnabled(next);
             break;
         case 's':
-            start.click();
+            clickIfEnabled(start);
             break;
         case ' ':
-            stop.click();
+            clickIfEnabled(stop);
             break;
     }
 })
@@ -213,9 +225,9 @@ exHanoi1.addEventListener("click", () => {
         alert("Enter A Number First")
         return
     }
-    const number = input.value;
+    const number = Number(input.value);
     console.log(number);
-    if((number < 0) || (number > 7)){
+    if((number < 1) || (number > 5)){
         alert("Your Number Is Not In The Range")
         location.reload();
         return
@@ -247,10 +259,8 @@ exHanoi2.addEventListener("click",() => {
         alert("Enter A Number First")
         return
     }
-    const number = input.value;
-    if(number === null)
-        return
-    if((number < 0) || (number > 7)){
+    const number = Number(input.value);
+    if((number < 1) || (number > 5)){
         alert("Your Number Is Not In The Range")
         location.reload();
         return
@@ -261,7 +271,7 @@ exHanoi2.addEventListener("click",() => {
 
     for(let index = number-1; index >= 0; index--)
         rods.A.appendChild(disks.pop());
-    diskCreator(number, "disk")
+    diskCreator(number, "diskB")
 
     for (let index = number - 1; index >= 0; index--)
         rods.C.appendChild(disks.pop());
@@ -276,8 +286,8 @@ exHanoi3.addEventListener("click", ()=> {
         alert("Enter A Number First")
         return
     }
-    const number = input.value;
-    if((number < 0) || (number > 7)){
+    const number = Number(input.value);
+    if((number < 1) || (number > 5)){
         alert("Your Number Is Not In The Range")
         location.reload();
         return
@@ -290,7 +300,7 @@ exHanoi3.addEventListener("click", ()=> {
         rods.A.appendChild(disks[index-2])
     }
     buttonsWorks()
-    exhanoi_3('A', 'B', 'C', number)
+    exHanoi_3('A', 'B', 'C', number)
     console.log(`Number Of Moves : ${moves.length}`);
 })
 
@@ -300,8 +310,8 @@ exHanoi4.addEventListener("click", () => {
         alert("Enter A Number First")
         return
     }
-    const number = input.value;
-    if ((number < 0) || (number > 7)) {
+    const number = Number(input.value);
+    if ((number < 1) || (number > 5)) {
         alert("Your Number Is Not In The Range")
         location.reload();
         return
@@ -312,7 +322,7 @@ exHanoi4.addEventListener("click", () => {
     for (let index = number - 1; index >= 0; index--)
         rods.A.appendChild(disks.pop());
     buttonsWorks()
-    exhanoi_4('A', 'B', 'C', 'D', number)
+    exHanoi_4('A', 'B', 'C', 'D', number)
     console.log(`Number Of Moves : ${moves.length}`);
 })
 
@@ -322,8 +332,8 @@ exHanoi5.addEventListener("click", () => {
         alert("Enter A Number First")
         return
     }
-    const number = input.value;
-    if ((number < 0) || (number > 7)) {
+    const number = Number(input.value);
+    if ((number < 1) || (number > 5)) {
         alert("Your Number Is Not In The Range")
         location.reload();
         return
@@ -345,6 +355,6 @@ exHanoi5.addEventListener("click", () => {
         index--;
     }
     buttonsWorks()
-    exhanoi_5('A', 'B', 'C', 'D', number)
+    exHanoi_5('A', 'B', 'C', 'D', number)
     console.log(`Number Of Moves : ${moves.length}`);
 })
